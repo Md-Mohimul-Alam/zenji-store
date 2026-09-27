@@ -2,6 +2,8 @@ import AnnouncementBar from './components/layout/AnnouncementBar'
 import Header from './components/layout/Header'
 import Hero from './components/home/Hero'
 import ProductGrid from './components/home/ProductGrid'
+import BrandStory from './components/home/BrandStory'
+import FeatureStrip from './components/home/FeatureStrip'
 import CartDrawer from './components/cart/CartDrawer'
 
 function App() {
@@ -13,6 +15,8 @@ function App() {
       <main>
         <Hero />
         <ProductGrid />
+        <BrandStory />
+        <FeatureStrip />
       </main>
 
       <CartDrawer />
