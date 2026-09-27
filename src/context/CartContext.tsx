@@ -1,6 +1,6 @@
 import {
   createContext,
-  useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -12,32 +12,120 @@ import type {
   ProductSize,
 } from '../types/product'
 
-interface CartContextType {
+export interface CartContextType {
   items: CartItem[]
   cartCount: number
   subtotal: number
   isCartOpen: boolean
 
-  addToCart: (product: Product, size: ProductSize) => void
-  removeFromCart: (productId: number, size: ProductSize) => void
-  increaseQuantity: (productId: number, size: ProductSize) => void
-  decreaseQuantity: (productId: number, size: ProductSize) => void
+  addToCart: (
+    product: Product,
+    size: ProductSize,
+  ) => void
+
+  removeFromCart: (
+    productId: number,
+    size: ProductSize,
+  ) => void
+
+  increaseQuantity: (
+    productId: number,
+    size: ProductSize,
+  ) => void
+
+  decreaseQuantity: (
+    productId: number,
+    size: ProductSize,
+  ) => void
 
   openCart: () => void
   closeCart: () => void
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined)
+export const CartContext = createContext<
+  CartContextType | undefined
+>(undefined)
 
 interface CartProviderProps {
   children: ReactNode
 }
 
-export function CartProvider({ children }: CartProviderProps) {
-  const [items, setItems] = useState<CartItem[]>([])
-  const [isCartOpen, setIsCartOpen] = useState(false)
+/**
+ * Load and validate cart data from localStorage.
+ */
+function getInitialCart(): CartItem[] {
+  try {
+    const savedCart = localStorage.getItem('zenji-cart')
 
-  const addToCart = (product: Product, size: ProductSize) => {
+    if (!savedCart) {
+      return []
+    }
+
+    const parsedCart: unknown = JSON.parse(savedCart)
+
+    if (!Array.isArray(parsedCart)) {
+      return []
+    }
+
+    return parsedCart.filter(
+      (item): item is CartItem => {
+        if (
+          typeof item !== 'object' ||
+          item === null ||
+          !('product' in item) ||
+          !('size' in item) ||
+          !('quantity' in item)
+        ) {
+          return false
+        }
+
+        const cartItem = item as Partial<CartItem>
+
+        return (
+          typeof cartItem.product?.id === 'number' &&
+          typeof cartItem.product?.name === 'string' &&
+          typeof cartItem.product?.price === 'number' &&
+          typeof cartItem.size === 'string' &&
+          typeof cartItem.quantity === 'number' &&
+          cartItem.quantity > 0
+        )
+      },
+    )
+  } catch {
+    return []
+  }
+}
+
+export function CartProvider({
+  children,
+}: CartProviderProps) {
+  const [items, setItems] =
+    useState<CartItem[]>(getInitialCart)
+
+  const [isCartOpen, setIsCartOpen] =
+    useState(false)
+
+  /**
+   * Save cart whenever items change.
+   */
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        'zenji-cart',
+        JSON.stringify(items),
+      )
+    } catch {
+      // Cart still works if localStorage is unavailable.
+    }
+  }, [items])
+
+  /**
+   * Add product to cart.
+   */
+  const addToCart = (
+    product: Product,
+    size: ProductSize,
+  ) => {
     setItems((currentItems) => {
       const existingItem = currentItems.find(
         (item) =>
@@ -70,6 +158,9 @@ export function CartProvider({ children }: CartProviderProps) {
     setIsCartOpen(true)
   }
 
+  /**
+   * Remove an item completely.
+   */
   const removeFromCart = (
     productId: number,
     size: ProductSize,
@@ -85,6 +176,9 @@ export function CartProvider({ children }: CartProviderProps) {
     )
   }
 
+  /**
+   * Increase quantity.
+   */
   const increaseQuantity = (
     productId: number,
     size: ProductSize,
@@ -102,6 +196,10 @@ export function CartProvider({ children }: CartProviderProps) {
     )
   }
 
+  /**
+   * Decrease quantity.
+   * Remove item when quantity reaches zero.
+   */
   const decreaseQuantity = (
     productId: number,
     size: ProductSize,
@@ -121,25 +219,31 @@ export function CartProvider({ children }: CartProviderProps) {
     )
   }
 
-  const cartCount = useMemo(
-    () =>
-      items.reduce(
-        (total, item) => total + item.quantity,
-        0,
-      ),
-    [items],
-  )
+  /**
+   * Total number of products in cart.
+   */
+  const cartCount = useMemo(() => {
+    return items.reduce(
+      (total, item) => total + item.quantity,
+      0,
+    )
+  }, [items])
 
-  const subtotal = useMemo(
-    () =>
-      items.reduce(
-        (total, item) =>
-          total + item.product.price * item.quantity,
-        0,
-      ),
-    [items],
-  )
+  /**
+   * Calculate cart subtotal.
+   */
+  const subtotal = useMemo(() => {
+    return items.reduce(
+      (total, item) =>
+        total +
+        item.product.price * item.quantity,
+      0,
+    )
+  }, [items])
 
+  /**
+   * Cart drawer controls.
+   */
   const openCart = () => {
     setIsCartOpen(true)
   }
@@ -153,10 +257,12 @@ export function CartProvider({ children }: CartProviderProps) {
     cartCount,
     subtotal,
     isCartOpen,
+
     addToCart,
     removeFromCart,
     increaseQuantity,
     decreaseQuantity,
+
     openCart,
     closeCart,
   }
@@ -166,16 +272,4 @@ export function CartProvider({ children }: CartProviderProps) {
       {children}
     </CartContext.Provider>
   )
-}
-
-export function useCart() {
-  const context = useContext(CartContext)
-
-  if (!context) {
-    throw new Error(
-      'useCart must be used inside a CartProvider',
-    )
-  }
-
-  return context
 }

@@ -1,7 +1,7 @@
 import { Minus, Plus, X } from 'lucide-react'
 
 import type { CartItem as CartItemType } from '../../types/product'
-import { useCart } from '../../context/CartContext'
+import { useCart } from '../../hooks/useCart'
 
 interface CartItemProps {
   item: CartItemType

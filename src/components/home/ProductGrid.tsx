@@ -15,18 +15,19 @@ function ProductGrid() {
               01 / Current Release
             </p>
 
-            <h2 className="text-4xl font-black uppercase tracking-[-0.04em] sm:text-5xl lg:text-7xl">
+            <h2 className="font-display text-4xl uppercase tracking-[-0.04em] sm:text-5xl lg:text-7xl">
               Shop The Drop
             </h2>
           </div>
 
           <p className="max-w-xs text-sm leading-6 text-white/45">
-            Limited-run pieces. Once they're gone, they're gone.
+            Limited-run pieces. Once they're gone,
+            they're gone.
           </p>
         </div>
 
-        {/* Products */}
-        <div className="grid grid-cols-1 gap-x-5 gap-y-16 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Responsive product grid */}
+        <div className="grid grid-cols-1 gap-x-5 gap-y-14 sm:grid-cols-2 sm:gap-y-16 lg:grid-cols-4">
           {products.map((product) => (
             <ProductCard
               key={product.id}

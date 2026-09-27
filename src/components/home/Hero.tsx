@@ -1,77 +1,118 @@
-import { Menu, ShoppingBag } from 'lucide-react'
-import { useCart } from '../../context/CartContext'
+import { ArrowDownRight } from 'lucide-react'
 
-function Header() {
-  const { cartCount, openCart } = useCart()
-
+function Hero() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0a]/95 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:h-20 lg:px-8">
-        {/* Mobile menu */}
-        <button
-          type="button"
-          className="flex h-10 w-10 items-center justify-start lg:hidden"
-          aria-label="Open navigation menu"
-        >
-          <Menu size={22} strokeWidth={1.5} />
-        </button>
+    <section className="relative min-h-[calc(100svh-100px)] overflow-hidden bg-[#080808]">
+      {/* Hero image */}
+      <div className="absolute inset-0">
+        <img
+          src="/images/hero/zenji-hero.webp"
+          alt=""
+          aria-hidden="true"
+          fetchPriority="high"
+          className="h-full w-full object-cover object-center lg:object-[65%_center]"
+        />
 
-        {/* Logo */}
-        <a
-          href="#"
-          className="text-2xl font-black tracking-[-0.05em] sm:text-3xl"
-          aria-label="ZENJI home"
-        >
-          ZENJI
-        </a>
+        <div className="absolute inset-0 bg-black/30" />
 
-        {/* Desktop navigation */}
-        <nav
-          className="hidden items-center gap-8 lg:flex"
-          aria-label="Main navigation"
-        >
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/10" />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+      </div>
+
+      {/* Decorative elements */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        aria-hidden="true"
+      >
+        <p className="absolute right-[-3rem] top-1/2 hidden -translate-y-1/2 rotate-90 text-[9px] font-medium uppercase tracking-[0.5em] text-white/35 lg:block">
+          Japanese Streetwear / Limited Release
+        </p>
+
+        <div className="absolute bottom-0 left-0 h-px w-full bg-white/10" />
+      </div>
+
+      {/* Hero content */}
+      <div className="relative mx-auto flex min-h-[calc(100svh-100px)] max-w-[1440px] flex-col justify-end px-4 pb-10 pt-28 sm:px-6 sm:pb-14 lg:px-8 lg:pb-16">
+        {/* Drop label */}
+        <div className="mb-6 flex items-center gap-3">
+          <span
+            className="h-px w-8 bg-red-600"
+            aria-hidden="true"
+          />
+
+          <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/70 sm:text-xs">
+            The Origin Drop / 01
+          </p>
+        </div>
+
+        {/* Main heading */}
+        <h1 className="font-display max-w-5xl text-[clamp(3.5rem,12vw,11rem)] uppercase leading-[0.82] tracking-[-0.075em]">
+          Wear
+
+          <span className="block text-white/35">
+            Your
+          </span>
+
+          <span className="block">
+            Story.
+          </span>
+        </h1>
+
+        {/* Bottom content */}
+        <div className="mt-10 flex flex-col gap-8 border-t border-white/20 pt-6 sm:mt-12 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="max-w-md text-sm leading-6 text-white/65 sm:text-base">
+              Limited-run streetwear inspired by Japanese art,
+              anime culture and the stories that shape us.
+            </p>
+
+            {/* Responsive metadata */}
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-white/40">
+              <span>240GSM</span>
+
+              <span
+                className="h-1 w-1 rounded-full bg-white/30"
+                aria-hidden="true"
+              />
+
+              <span>Oversized Fit</span>
+
+              <span
+                className="h-1 w-1 rounded-full bg-white/30"
+                aria-hidden="true"
+              />
+
+              <span>No Restock</span>
+            </div>
+          </div>
+
+          {/* CTA */}
           <a
             href="#shop"
-            className="text-xs font-medium uppercase tracking-[0.18em] text-white/70 transition-colors hover:text-white"
+            className="group inline-flex min-h-14 w-fit items-center gap-8 bg-white px-7 text-xs font-bold uppercase tracking-[0.2em] text-black transition-all duration-300 hover:bg-red-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-black"
           >
-            Shop
-          </a>
+            Shop the drop
 
-          <a
-            href="#story"
-            className="text-xs font-medium uppercase tracking-[0.18em] text-white/70 transition-colors hover:text-white"
-          >
-            Our Story
+            <ArrowDownRight
+              size={18}
+              strokeWidth={1.5}
+              className="transition-transform duration-300 group-hover:translate-x-1 group-hover:translate-y-1"
+              aria-hidden="true"
+            />
           </a>
+        </div>
 
-          <a
-            href="#about"
-            className="text-xs font-medium uppercase tracking-[0.18em] text-white/70 transition-colors hover:text-white"
-          >
-            About
-          </a>
-        </nav>
-
-        {/* Cart */}
-        <button
-          type="button"
-          onClick={openCart}
-          className="relative flex h-10 items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-          aria-label={`Open shopping cart with ${cartCount} items`}
+        {/* Decorative drop number */}
+        <p
+          className="pointer-events-none absolute right-4 top-10 hidden font-display text-[10rem] leading-none text-white/[0.035] lg:block xl:text-[14rem]"
+          aria-hidden="true"
         >
-          <ShoppingBag size={21} strokeWidth={1.5} />
-
-          <span className="hidden text-xs font-medium uppercase tracking-[0.15em] sm:inline">
-            Cart
-          </span>
-
-          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-black">
-            {cartCount}
-          </span>
-        </button>
+          01
+        </p>
       </div>
-    </header>
+    </section>
   )
 }
 
-export default Header
+export default Hero
