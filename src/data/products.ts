@@ -1,0 +1,45 @@
+import type { Product } from '../types/product'
+
+export const products: Product[] = [
+  {
+    id: 1,
+    name: 'Blue Flame Tee',
+    collection: 'THE_ORIGIN_DROP',
+    price: 33.99,
+    originalPrice: 39.99,
+    image: '/images/products/blue-flame.webp',
+    alt: 'Black oversized Blue Flame graphic streetwear tee',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    badge: 'LIMITED',
+  },
+  {
+    id: 2,
+    name: 'Bushido Tee',
+    collection: 'THE_ORIGIN_DROP',
+    price: 39.99,
+    image: '/images/products/bushido.webp',
+    alt: 'Black oversized Bushido Japanese-inspired graphic tee',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    badge: 'NEW',
+  },
+  {
+    id: 3,
+    name: 'Demon Blood Tee',
+    collection: 'THE_ORIGIN_DROP',
+    price: 33.99,
+    originalPrice: 39.99,
+    image: '/images/products/demon-blood.webp',
+    alt: 'Black oversized Demon Blood graphic streetwear tee',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    badge: 'LIMITED',
+  },
+  {
+    id: 4,
+    name: 'Domain Expansion Tee',
+    collection: 'THE_ORIGIN_DROP',
+    price: 39.99,
+    image: '/images/products/domain-expansion.webp',
+    alt: 'Black oversized Domain Expansion graphic streetwear tee',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+  },
+]
