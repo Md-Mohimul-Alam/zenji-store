@@ -1,5 +1,4 @@
 import {
-  createContext,
   useEffect,
   useMemo,
   useState,
@@ -12,47 +11,12 @@ import type {
   ProductSize,
 } from '../types/product'
 
-export interface CartContextType {
-  items: CartItem[]
-  cartCount: number
-  subtotal: number
-  isCartOpen: boolean
-
-  addToCart: (
-    product: Product,
-    size: ProductSize,
-  ) => void
-
-  removeFromCart: (
-    productId: number,
-    size: ProductSize,
-  ) => void
-
-  increaseQuantity: (
-    productId: number,
-    size: ProductSize,
-  ) => void
-
-  decreaseQuantity: (
-    productId: number,
-    size: ProductSize,
-  ) => void
-
-  openCart: () => void
-  closeCart: () => void
-}
-
-export const CartContext = createContext<
-  CartContextType | undefined
->(undefined)
+import { CartContext } from './cart-context'
 
 interface CartProviderProps {
   children: ReactNode
 }
 
-/**
- * Load and validate cart data from localStorage.
- */
 function getInitialCart(): CartItem[] {
   try {
     const savedCart = localStorage.getItem('zenji-cart')
@@ -105,9 +69,6 @@ export function CartProvider({
   const [isCartOpen, setIsCartOpen] =
     useState(false)
 
-  /**
-   * Save cart whenever items change.
-   */
   useEffect(() => {
     try {
       localStorage.setItem(
@@ -115,13 +76,10 @@ export function CartProvider({
         JSON.stringify(items),
       )
     } catch {
-      // Cart still works if localStorage is unavailable.
+      // Continue without persistence if storage is unavailable.
     }
   }, [items])
 
-  /**
-   * Add product to cart.
-   */
   const addToCart = (
     product: Product,
     size: ProductSize,
@@ -158,9 +116,6 @@ export function CartProvider({
     setIsCartOpen(true)
   }
 
-  /**
-   * Remove an item completely.
-   */
   const removeFromCart = (
     productId: number,
     size: ProductSize,
@@ -176,9 +131,6 @@ export function CartProvider({
     )
   }
 
-  /**
-   * Increase quantity.
-   */
   const increaseQuantity = (
     productId: number,
     size: ProductSize,
@@ -196,10 +148,6 @@ export function CartProvider({
     )
   }
 
-  /**
-   * Decrease quantity.
-   * Remove item when quantity reaches zero.
-   */
   const decreaseQuantity = (
     productId: number,
     size: ProductSize,
@@ -219,9 +167,6 @@ export function CartProvider({
     )
   }
 
-  /**
-   * Total number of products in cart.
-   */
   const cartCount = useMemo(() => {
     return items.reduce(
       (total, item) => total + item.quantity,
@@ -229,9 +174,6 @@ export function CartProvider({
     )
   }, [items])
 
-  /**
-   * Calculate cart subtotal.
-   */
   const subtotal = useMemo(() => {
     return items.reduce(
       (total, item) =>
@@ -241,9 +183,6 @@ export function CartProvider({
     )
   }, [items])
 
-  /**
-   * Cart drawer controls.
-   */
   const openCart = () => {
     setIsCartOpen(true)
   }
@@ -252,17 +191,15 @@ export function CartProvider({
     setIsCartOpen(false)
   }
 
-  const value: CartContextType = {
+  const value = {
     items,
     cartCount,
     subtotal,
     isCartOpen,
-
     addToCart,
     removeFromCart,
     increaseQuantity,
     decreaseQuantity,
-
     openCart,
     closeCart,
   }
